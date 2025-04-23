@@ -67,6 +67,8 @@ fun ChefJunaApp() {
     var selectedIndex by remember { mutableStateOf(0) }
     var currentScreen by remember { mutableStateOf("home") }
     var selectedDish by remember { mutableStateOf<Dish?>(null) }
+    var searchQuery by remember { mutableStateOf("") }
+    var isSearching by remember { mutableStateOf(false) }
 
     val navController = rememberNavController()
 
@@ -87,11 +89,19 @@ fun ChefJunaApp() {
         ) {
             composable("home") {
                 currentScreen = "home"
-                HomeScreen(onDishClick = { dish ->
-                    selectedDish = dish
-                    currentScreen = "recipe_detail"
-                    navController.navigate("recipe_detail")
-                })
+                HomeScreen(
+                    onDishClick = { dish ->
+                        selectedDish = dish
+                        currentScreen = "recipe_detail"
+                        navController.navigate("recipe_detail")
+                    },
+                    searchQuery = searchQuery,
+                    onSearchChanged = { query ->
+                        searchQuery = query
+                        isSearching = query.isNotEmpty()
+                    },
+                    isSearching = isSearching
+                )
             }
             composable("recipe_detail") {
                 RecipeDetailScreen(
@@ -452,7 +462,27 @@ fun BottomNavigationBar(selectedIndex: Int, onItemSelected: (Int) -> Unit) {
 }
 
 @Composable
-fun HomeScreen(onDishClick: (Dish) -> Unit) {
+fun HomeScreen(
+    onDishClick: (Dish) -> Unit,
+    searchQuery: String,
+    onSearchChanged: (String) -> Unit,
+    isSearching: Boolean
+) {
+    // Define all dishes
+    val allDishes = listOf(
+        Dish("Avocado Toast", "245 kcal", "$9.99", R.drawable.avocado_toast),
+        Dish("Italian Salad", "380 kcal", "$12.50", R.drawable.italian_salad),
+        Dish("Poached Egg", "180 kcal", "$8.75", R.drawable.poached_egg),
+        Dish("Cooked Noodles", "420 kcal", "$11.25", R.drawable.cooked_noodles)
+    )
+
+    // Filter dishes based on search query
+    val filteredDishes = if (searchQuery.isEmpty()) {
+        allDishes
+    } else {
+        allDishes.filter { it.name.contains(searchQuery, ignoreCase = true) }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -483,8 +513,8 @@ fun HomeScreen(onDishClick: (Dish) -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = searchQuery,
+            onValueChange = onSearchChanged,
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             placeholder = { Text("Search dishes") },
             modifier = Modifier.fillMaxWidth(),
@@ -493,25 +523,37 @@ fun HomeScreen(onDishClick: (Dish) -> Unit) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        SectionTitle(title = "Popular dishes")
-        DishRow(
-            dishes = listOf(
-                Dish("Avocado Toast", "245 kcal", "$9.99", R.drawable.avocado_toast),
-                Dish("Italian Salad", "380 kcal", "$12.50", R.drawable.italian_salad)
-            ),
-            onDishClick = onDishClick
-        )
+        if (isSearching) {
+            // Display search results
+            if (filteredDishes.isNotEmpty()) {
+                SectionTitle(title = "Search Results")
+                DishRow(dishes = filteredDishes, onDishClick = onDishClick)
+            } else {
+                Text("No dishes found matching \"$searchQuery\"",
+                    modifier = Modifier.padding(vertical = 16.dp))
+            }
+        } else {
+            // Display normal content when not searching
+            SectionTitle(title = "Popular dishes")
+            DishRow(
+                dishes = listOf(
+                    Dish("Avocado Toast", "245 kcal", "$9.99", R.drawable.avocado_toast),
+                    Dish("Italian Salad", "380 kcal", "$12.50", R.drawable.italian_salad)
+                ),
+                onDishClick = onDishClick
+            )
 
-        Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-        SectionTitle(title = "Recipe of the week")
-        DishRow(
-            dishes = listOf(
-                Dish("Poached Egg", "180 kcal", "$8.75", R.drawable.poached_egg),
-                Dish("Cooked Noodles", "420 kcal", "$11.25", R.drawable.cooked_noodles)
-            ),
-            onDishClick = onDishClick
-        )
+            SectionTitle(title = "Recipe of the week")
+            DishRow(
+                dishes = listOf(
+                    Dish("Poached Egg", "180 kcal", "$8.75", R.drawable.poached_egg),
+                    Dish("Cooked Noodles", "420 kcal", "$11.25", R.drawable.cooked_noodles)
+                ),
+                onDishClick = onDishClick
+            )
+        }
 
         Spacer(modifier = Modifier.weight(1f))
 
