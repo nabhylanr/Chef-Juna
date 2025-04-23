@@ -15,6 +15,7 @@ import com.example.chefjuna.ui.theme.ChefJunaTheme
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -41,7 +42,11 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.GridView
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -69,6 +74,9 @@ fun ChefJunaApp() {
     var selectedDish by remember { mutableStateOf<Dish?>(null) }
     var searchQuery by remember { mutableStateOf("") }
     var isSearching by remember { mutableStateOf(false) }
+    val favoriteDishes = remember { mutableStateListOf<Dish>() }
+    var showFavoriteToast by remember { mutableStateOf(false) }
+    var favoriteToastMessage by remember { mutableStateOf("") }
 
     val navController = rememberNavController()
 
@@ -76,11 +84,54 @@ fun ChefJunaApp() {
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
             if (currentScreen != "recipe_detail") {
-                BottomNavigationBar(selectedIndex = selectedIndex, onItemSelected = {
-                    selectedIndex = it
-                })
+                BottomNavigationBar(
+                    selectedIndex = selectedIndex,
+                    onItemSelected = {
+                        selectedIndex = it
+                        when (it) {
+                            0 -> {
+                                currentScreen = "home"
+                                navController.navigate("home") {
+                                    popUpTo("home") { inclusive = true }
+                                }
+                            }
+                            1 -> {
+                                currentScreen = "explore"
+                                navController.navigate("explore") {
+                                    popUpTo("home")
+                                }
+                            }
+                            2 -> {
+                                currentScreen = "favorite"
+                                navController.navigate("favorite") {
+                                    popUpTo("home")
+                                }
+                            }
+                            3 -> {
+                                currentScreen = "profile"
+                                navController.navigate("profile") {
+                                    popUpTo("home")
+                                }
+                            }
+                        }
+                    }
+                )
             }
         },
+        snackbarHost = {
+            if (showFavoriteToast) {
+                Snackbar(
+                    modifier = Modifier.padding(16.dp),
+                    action = {
+                        TextButton(onClick = { showFavoriteToast = false }) {
+                            Text("Dismiss")
+                        }
+                    }
+                ) {
+                    Text(favoriteToastMessage)
+                }
+            }
+        }
     ) { innerPadding ->
         NavHost(
             navController = navController,
@@ -109,6 +160,17 @@ fun ChefJunaApp() {
                     onBackClick = {
                         currentScreen = "home"
                         navController.popBackStack()
+                    },
+                    favoriteDishes = favoriteDishes,
+                    onToggleFavorite = { dish ->
+                        if (favoriteDishes.contains(dish)) {
+                            favoriteDishes.remove(dish)
+                            favoriteToastMessage = "Removed from favorites"
+                        } else {
+                            favoriteDishes.add(dish)
+                            favoriteToastMessage = "Added to favorites"
+                        }
+                        showFavoriteToast = true
                     }
                 )
             }
@@ -118,7 +180,14 @@ fun ChefJunaApp() {
             }
             composable("favorite") {
                 currentScreen = "favorite"
-                FavoriteScreen()
+                FavoriteScreen(
+                    favoriteDishes = favoriteDishes,
+                    onDishClick = { dish ->
+                        selectedDish = dish
+                        currentScreen = "recipe_detail"
+                        navController.navigate("recipe_detail")
+                    }
+                )
             }
             composable("profile") {
                 currentScreen = "profile"
@@ -172,8 +241,14 @@ fun DishRow(dishes: List<Dish>, onDishClick: (Dish) -> Unit) {
 }
 
 @Composable
-fun RecipeDetailScreen(dish: Dish, onBackClick: () -> Unit) {
+fun RecipeDetailScreen(
+    dish: Dish,
+    onBackClick: () -> Unit,
+    favoriteDishes: SnapshotStateList<Dish>,
+    onToggleFavorite: (Dish) -> Unit
+) {
     var quantity by remember { mutableStateOf(1) }
+    val isFavorite = favoriteDishes.contains(dish)
 
     val ingredients = listOf(
         Ingredient("Tomato", R.drawable.tomato),
@@ -216,6 +291,15 @@ fun RecipeDetailScreen(dish: Dish, onBackClick: () -> Unit) {
                     }
 
                     Row {
+                        // Favorite button
+                        IconButton(onClick = { onToggleFavorite(dish) }) {
+                            Icon(
+                                imageVector = if (isFavorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                                contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
+                                tint = Color.White
+                            )
+                        }
+
                         IconButton(onClick = { /* Search action */ }) {
                             Icon(
                                 imageVector = Icons.Default.Search,
@@ -573,6 +657,96 @@ fun HomeScreen(
     }
 }
 
-@Composable fun ExploreScreen() { Text("Explore Screen", modifier = Modifier.padding(16.dp)) }
-@Composable fun FavoriteScreen() { Text("Favorite Screen", modifier = Modifier.padding(16.dp)) }
-@Composable fun ProfileScreen() { Text("Profile Screen", modifier = Modifier.padding(16.dp)) }
+@Composable
+fun ExploreScreen() {
+    Text("Explore Screen", modifier = Modifier.padding(16.dp))
+}
+
+@Composable
+fun FavoriteScreen(favoriteDishes: List<Dish>, onDishClick: (Dish) -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Your Favorite Recipes",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF508130),
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        if (favoriteDishes.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "You haven't added any favorites yet",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.Gray
+                )
+            }
+        } else {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(favoriteDishes) { dish ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.White, RoundedCornerShape(16.dp))
+                            .clickable { onDishClick(dish) }
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(id = dish.imageRes),
+                            contentDescription = dish.name,
+                            modifier = Modifier
+                                .size(80.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                        )
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Column {
+                            Text(
+                                text = dish.name,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = dish.calories,
+                                color = Color.Gray,
+                                fontSize = 14.sp
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = dish.price,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 16.sp
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Icon(
+                            imageVector = Icons.Outlined.Favorite,
+                            contentDescription = "Favorite",
+                            tint = Color(0xFFE91E63),
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ProfileScreen() {
+    Text("Profile Screen", modifier = Modifier.padding(16.dp))
+}
