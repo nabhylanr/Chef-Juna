@@ -146,7 +146,7 @@ fun ChefJunaApp() {
             }
 
             composable(PROFILE) {
-                ProfileScreen()
+                ProfileScreen(navController = navController)
             }
         }
     }

@@ -127,7 +127,7 @@ fun RegisterScreen(navController: NavController) {
                     colors = ButtonDefaults.buttonColors(containerColor = primaryGreen),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Sign In", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Text("Sign Up", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -143,7 +143,7 @@ fun RegisterScreen(navController: NavController) {
                             popUpTo(REGISTER) { inclusive = true }
                         }
                     }) {
-                        Text("Sign Up", color = primaryGreen)
+                        Text("Sign In", color = primaryGreen)
                     }
                 }
             }
