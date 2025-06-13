@@ -2,25 +2,13 @@ package com.example.chefjuna.ui.pages
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -96,7 +84,11 @@ fun HomeScreen(
         if (isSearching) {
             if (filteredDishes.isNotEmpty()) {
                 SectionTitle(title = "Search Results")
-                DishRow(dishes = filteredDishes, onDishClick = onDishClick)
+                DishRow(
+                    dishes = filteredDishes,
+                    onDishClick = onDishClick,
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                )
             } else {
                 Text("No dishes found matching \"$searchQuery\"",
                     modifier = Modifier.padding(vertical = 16.dp))
@@ -108,7 +100,8 @@ fun HomeScreen(
                     Dish("Avocado Toast", "245 kcal", "$9.99", R.drawable.avocado_toast),
                     Dish("Italian Salad", "380 kcal", "$12.50", R.drawable.italian_salad)
                 ),
-                onDishClick = onDishClick
+                onDishClick = onDishClick,
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -119,7 +112,8 @@ fun HomeScreen(
                     Dish("Poached Egg", "180 kcal", "$8.75", R.drawable.poached_egg),
                     Dish("Cooked Noodles", "420 kcal", "$11.25", R.drawable.cooked_noodles)
                 ),
-                onDishClick = onDishClick
+                onDishClick = onDishClick,
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             )
         }
 

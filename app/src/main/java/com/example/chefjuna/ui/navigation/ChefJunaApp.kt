@@ -14,6 +14,8 @@ import com.example.chefjuna.ui.navigation.NavigationRoutes.FAVORITE
 import com.example.chefjuna.ui.navigation.NavigationRoutes.PROFILE
 import com.example.chefjuna.ui.navigation.NavigationRoutes.RECIPE_DETAIL
 import com.example.chefjuna.ui.navigation.NavigationRoutes.SPLASH
+import com.example.chefjuna.ui.navigation.NavigationRoutes.LOGIN
+import com.example.chefjuna.ui.navigation.NavigationRoutes.REGISTER
 import com.example.chefjuna.ui.components.BottomNavigationBar
 import com.example.chefjuna.ui.pages.*
 import com.example.chefjuna.ui.model.Dish
@@ -32,7 +34,7 @@ fun ChefJunaApp() {
     var showFavoriteToast by remember { mutableStateOf(false) }
     var favoriteToastMessage by remember { mutableStateOf("") }
 
-    val showBottomBar = currentDestination != SPLASH && currentDestination != RECIPE_DETAIL
+    val showBottomBar = currentDestination != SPLASH && currentDestination != RECIPE_DETAIL && currentDestination != LOGIN && currentDestination != REGISTER
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -84,6 +86,14 @@ fun ChefJunaApp() {
         ) {
             composable(SPLASH) {
                 SplashScreen(navController)
+            }
+
+            composable(LOGIN) {
+                LoginScreen(navController)
+            }
+
+            composable(REGISTER) {
+                RegisterScreen(navController)
             }
 
             composable(HOME) {

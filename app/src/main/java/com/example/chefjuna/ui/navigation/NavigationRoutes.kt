@@ -7,4 +7,6 @@ object NavigationRoutes {
     const val PROFILE = "profile"
     const val RECIPE_DETAIL = "recipe_detail"
     const val SPLASH = "splash"
+    const val LOGIN = "login"
+    const val REGISTER = "register"
 }

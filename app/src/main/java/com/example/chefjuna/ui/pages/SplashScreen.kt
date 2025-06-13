@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.delay
 import com.example.chefjuna.R
-import com.example.chefjuna.ui.navigation.NavigationRoutes.HOME
+import com.example.chefjuna.ui.navigation.NavigationRoutes.LOGIN
 import com.example.chefjuna.ui.navigation.NavigationRoutes.SPLASH
 
 @Composable
@@ -32,7 +32,7 @@ fun SplashScreen(navController: NavHostController) {
     LaunchedEffect(Unit) {
         visible = true
         delay(3000)
-        navController.navigate(HOME) {
+        navController.navigate(LOGIN) {
             popUpTo(SPLASH) { inclusive = true }
         }
     }
