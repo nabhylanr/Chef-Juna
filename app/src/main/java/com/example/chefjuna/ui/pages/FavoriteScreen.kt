@@ -31,7 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.chefjuna.Dish
+import com.example.chefjuna.ui.model.Dish
 
 @Composable
 fun FavoriteScreen(favoriteDishes: List<Dish>, onDishClick: (Dish) -> Unit) {

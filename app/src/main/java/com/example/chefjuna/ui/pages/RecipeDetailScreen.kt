@@ -42,9 +42,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.chefjuna.Dish
-import com.example.chefjuna.Ingredient
+import com.example.chefjuna.ui.model.Dish
+import com.example.chefjuna.ui.model.Ingredient
 import com.example.chefjuna.R
+import androidx.compose.material.icons.outlined.GridOn
+import androidx.compose.material.icons.filled.RemoveCircle
 
 @Composable
 fun RecipeDetailScreen(
@@ -80,7 +82,6 @@ fun RecipeDetailScreen(
                         shape = RoundedCornerShape(bottomStart = 40.dp, bottomEnd = 40.dp)
                     )
             ) {
-                // Top bar
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -97,7 +98,6 @@ fun RecipeDetailScreen(
                     }
 
                     Row {
-                        // Favorite button
                         IconButton(onClick = { onToggleFavorite(dish) }) {
                             Icon(
                                 imageVector = if (isFavorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
@@ -106,16 +106,16 @@ fun RecipeDetailScreen(
                             )
                         }
 
-                        IconButton(onClick = { /* Search action */ }) {
+                        IconButton(onClick = { }) {
                             Icon(
                                 imageVector = Icons.Default.Search,
                                 contentDescription = "Search",
                                 tint = Color.White
                             )
                         }
-                        IconButton(onClick = { /* Grid view action */ }) {
+                        IconButton(onClick = { }) {
                             Icon(
-                                imageVector = Icons.Outlined.GridView,
+                                imageVector = Icons.Outlined.GridOn,
                                 contentDescription = "Grid view",
                                 tint = Color.White
                             )
@@ -211,7 +211,7 @@ fun RecipeDetailScreen(
                         modifier = Modifier.size(24.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Remove,
+                            imageVector = Icons.Default.RemoveCircle,
                             contentDescription = "Decrease",
                             tint = Color.Gray
                         )

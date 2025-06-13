@@ -29,9 +29,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.chefjuna.Dish
+import com.example.chefjuna.ui.model.Dish
 import com.example.chefjuna.R
-import com.example.chefjuna.SectionTitle
+import com.example.chefjuna.ui.components.SectionTitle
 
 @Composable
 fun HomeScreen(
