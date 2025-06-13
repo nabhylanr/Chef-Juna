@@ -13,14 +13,18 @@ import com.example.chefjuna.ui.navigation.NavigationRoutes.EXPLORE
 import com.example.chefjuna.ui.navigation.NavigationRoutes.FAVORITE
 import com.example.chefjuna.ui.navigation.NavigationRoutes.PROFILE
 import com.example.chefjuna.ui.navigation.NavigationRoutes.RECIPE_DETAIL
+import com.example.chefjuna.ui.navigation.NavigationRoutes.SPLASH
 import com.example.chefjuna.ui.components.BottomNavigationBar
 import com.example.chefjuna.ui.pages.*
 import com.example.chefjuna.ui.model.Dish
 
 @Composable
 fun ChefJunaApp() {
+    val navController = rememberNavController()
+    val currentBackStack by navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackStack?.destination?.route
+
     var selectedIndex by remember { mutableStateOf(0) }
-    var currentScreen by remember { mutableStateOf(HOME) }
     var selectedDish by remember { mutableStateOf<Dish?>(null) }
     var searchQuery by remember { mutableStateOf("") }
     var isSearching by remember { mutableStateOf(false) }
@@ -28,40 +32,28 @@ fun ChefJunaApp() {
     var showFavoriteToast by remember { mutableStateOf(false) }
     var favoriteToastMessage by remember { mutableStateOf("") }
 
-    val navController = rememberNavController()
+    val showBottomBar = currentDestination != SPLASH && currentDestination != RECIPE_DETAIL
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            if (currentScreen != RECIPE_DETAIL) {
+            if (showBottomBar) {
                 BottomNavigationBar(
                     selectedIndex = selectedIndex,
                     onItemSelected = {
                         selectedIndex = it
                         when (it) {
-                            0 -> {
-                                currentScreen = HOME
-                                navController.navigate(HOME) {
-                                    popUpTo(HOME) { inclusive = true }
-                                }
+                            0 -> navController.navigate(HOME) {
+                                popUpTo(HOME) { inclusive = true }
                             }
-                            1 -> {
-                                currentScreen = EXPLORE
-                                navController.navigate(EXPLORE) {
-                                    popUpTo(HOME)
-                                }
+                            1 -> navController.navigate(EXPLORE) {
+                                popUpTo(HOME)
                             }
-                            2 -> {
-                                currentScreen = FAVORITE
-                                navController.navigate(FAVORITE) {
-                                    popUpTo(HOME)
-                                }
+                            2 -> navController.navigate(FAVORITE) {
+                                popUpTo(HOME)
                             }
-                            3 -> {
-                                currentScreen = PROFILE
-                                navController.navigate(PROFILE) {
-                                    popUpTo(HOME)
-                                }
+                            3 -> navController.navigate(PROFILE) {
+                                popUpTo(HOME)
                             }
                         }
                     }
@@ -87,15 +79,17 @@ fun ChefJunaApp() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = HOME,
+            startDestination = SPLASH,
             modifier = Modifier.padding(innerPadding)
         ) {
+            composable(SPLASH) {
+                SplashScreen(navController)
+            }
+
             composable(HOME) {
-                currentScreen = HOME
                 HomeScreen(
                     onDishClick = { dish ->
                         selectedDish = dish
-                        currentScreen = RECIPE_DETAIL
                         navController.navigate(RECIPE_DETAIL)
                     },
                     searchQuery = searchQuery,
@@ -111,7 +105,6 @@ fun ChefJunaApp() {
                 RecipeDetailScreen(
                     dish = selectedDish ?: Dish("Avocado Toast", "245 kcal", "$45", R.drawable.avocado_toast),
                     onBackClick = {
-                        currentScreen = HOME
                         navController.popBackStack()
                     },
                     favoriteDishes = favoriteDishes,
@@ -129,24 +122,20 @@ fun ChefJunaApp() {
             }
 
             composable(EXPLORE) {
-                currentScreen = EXPLORE
                 ExploreScreen()
             }
 
             composable(FAVORITE) {
-                currentScreen = FAVORITE
                 FavoriteScreen(
                     favoriteDishes = favoriteDishes,
                     onDishClick = { dish ->
                         selectedDish = dish
-                        currentScreen = RECIPE_DETAIL
                         navController.navigate(RECIPE_DETAIL)
                     }
                 )
             }
 
             composable(PROFILE) {
-                currentScreen = PROFILE
                 ProfileScreen()
             }
         }

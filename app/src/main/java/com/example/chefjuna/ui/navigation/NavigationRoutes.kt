@@ -6,4 +6,5 @@ object NavigationRoutes {
     const val FAVORITE = "favorite"
     const val PROFILE = "profile"
     const val RECIPE_DETAIL = "recipe_detail"
+    const val SPLASH = "splash"
 }

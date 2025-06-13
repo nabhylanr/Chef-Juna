@@ -40,7 +40,6 @@ fun HomeScreen(
     onSearchChanged: (String) -> Unit,
     isSearching: Boolean
 ) {
-    // Define all dishes
     val allDishes = listOf(
         Dish("Avocado Toast", "245 kcal", "$9.99", R.drawable.avocado_toast),
         Dish("Italian Salad", "380 kcal", "$12.50", R.drawable.italian_salad),
@@ -48,7 +47,6 @@ fun HomeScreen(
         Dish("Cooked Noodles", "420 kcal", "$11.25", R.drawable.cooked_noodles)
     )
 
-    // Filter dishes based on search query
     val filteredDishes = if (searchQuery.isEmpty()) {
         allDishes
     } else {
@@ -96,7 +94,6 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         if (isSearching) {
-            // Display search results
             if (filteredDishes.isNotEmpty()) {
                 SectionTitle(title = "Search Results")
                 DishRow(dishes = filteredDishes, onDishClick = onDishClick)
@@ -105,7 +102,6 @@ fun HomeScreen(
                     modifier = Modifier.padding(vertical = 16.dp))
             }
         } else {
-            // Display normal content when not searching
             SectionTitle(title = "Popular dishes")
             DishRow(
                 dishes = listOf(
