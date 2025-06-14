@@ -4,8 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -28,7 +25,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.chefjuna.ui.model.Dish
 import com.example.chefjuna.R
 
@@ -51,7 +47,6 @@ fun HomeScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    // Enhanced dish collection with more variety
     val allDishes = listOf(
         Dish("Avocado Toast", "245 kcal", "$9.99", R.drawable.avocado_toast),
         Dish("Italian Salad", "380 kcal", "$12.50", R.drawable.italian_salad),
@@ -89,7 +84,6 @@ fun HomeScreen(
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
-        // Header with gradient background
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -147,12 +141,12 @@ fun HomeScreen(
             }
         }
 
-        // Search Bar with shadow
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
             shape = RoundedCornerShape(16.dp)
         ) {
             OutlinedTextField(
@@ -205,7 +199,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0))
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {
                     Column(
                         modifier = Modifier.padding(24.dp),
@@ -232,13 +226,11 @@ fun HomeScreen(
                 }
             }
         } else {
-            // Featured Recipe Card
             FeaturedRecipeCard(
                 dish = featuredDish,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
             )
 
-            // Popular Dishes Section
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -266,7 +258,6 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Chef's Recommendations Section
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -292,11 +283,9 @@ fun HomeScreen(
                 )
             }
 
-            // Extra spacing for better scrolling experience
             Spacer(modifier = Modifier.height(100.dp))
         }
 
-        // Floating Action Button for Cart (positioned at the bottom when scrolling)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -328,7 +317,8 @@ fun FeaturedRecipeCard(
             .height(200.dp)
             .clickable { /* Handle featured dish click */ },
         elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
-        shape = RoundedCornerShape(20.dp)
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
@@ -338,7 +328,6 @@ fun FeaturedRecipeCard(
                 contentScale = ContentScale.Crop
             )
 
-            // Gradient overlay
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -352,7 +341,6 @@ fun FeaturedRecipeCard(
                     )
             )
 
-            // Content
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
@@ -434,7 +422,8 @@ fun EnhancedDishCard(
             .height(200.dp)
             .clickable { onDishClick(dish) },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Box(
@@ -449,7 +438,6 @@ fun EnhancedDishCard(
                     contentScale = ContentScale.Crop
                 )
 
-                // Price badge
                 Card(
                     modifier = Modifier
                         .align(Alignment.TopEnd)

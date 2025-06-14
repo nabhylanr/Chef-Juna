@@ -48,7 +48,6 @@ fun ExploreScreen() {
                 .background(Color(0xFFF8F9FA)),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Header Section with Search
             item {
                 Column(
                     modifier = Modifier
@@ -70,7 +69,6 @@ fun ExploreScreen() {
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // Search Bar
                     OutlinedTextField(
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
@@ -85,7 +83,6 @@ fun ExploreScreen() {
                 }
             }
 
-            // Featured Recipe Hero Section
             item {
                 Card(
                     modifier = Modifier
@@ -94,7 +91,7 @@ fun ExploreScreen() {
                         .padding(horizontal = 16.dp)
                         .clickable { },
                     shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                 ) {
                     Box {
                         Image(
@@ -104,7 +101,6 @@ fun ExploreScreen() {
                             modifier = Modifier.fillMaxSize()
                         )
 
-                        // Gradient overlay
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -118,7 +114,6 @@ fun ExploreScreen() {
                                 )
                         )
 
-                        // Content overlay
                         Column(
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
@@ -158,7 +153,6 @@ fun ExploreScreen() {
                 }
             }
 
-            // Categories Section
             item {
                 Column {
                     Text(
@@ -183,7 +177,6 @@ fun ExploreScreen() {
                 }
             }
 
-            // Trending Recipes
             item {
                 Column {
                     Row(
@@ -215,7 +208,6 @@ fun ExploreScreen() {
                 }
             }
 
-            // Chef Recommendations
             item {
                 Column {
                     Text(
@@ -237,7 +229,6 @@ fun ExploreScreen() {
                 }
             }
 
-            // Quick & Easy Section
             item {
                 Column {
                     Text(
@@ -259,7 +250,6 @@ fun ExploreScreen() {
                 }
             }
 
-            // Add bottom padding
             item {
                 Spacer(modifier = Modifier.height(80.dp))
             }
@@ -302,7 +292,6 @@ fun CategoryDetailScreen(
             )
         )
 
-        // Category Header
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -402,7 +391,8 @@ fun CategoryRecipeCard(recipe: Recipe) {
             .fillMaxWidth()
             .clickable { },
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column {
             Image(
@@ -461,7 +451,8 @@ fun TrendingRecipeCard(recipe: Recipe) {
             .width(160.dp)
             .clickable { },
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column {
             Box {
@@ -474,7 +465,6 @@ fun TrendingRecipeCard(recipe: Recipe) {
                         .height(100.dp)
                 )
 
-                // Trending badge
                 Surface(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
@@ -530,7 +520,8 @@ fun ChefRecommendationCard(recipe: ChefRecommendation) {
             .fillMaxWidth()
             .clickable { },
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Row {
             Image(
@@ -609,7 +600,8 @@ fun QuickRecipeCard(recipe: Recipe) {
             .width(140.dp)
             .clickable { },
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column {
             Box {
@@ -622,7 +614,6 @@ fun QuickRecipeCard(recipe: Recipe) {
                         .height(90.dp)
                 )
 
-                // Quick badge
                 Surface(
                     modifier = Modifier
                         .align(Alignment.TopStart)
@@ -661,7 +652,6 @@ fun QuickRecipeCard(recipe: Recipe) {
     }
 }
 
-// Data classes
 data class ExploreCategory(val name: String, val imageRes: Int)
 data class Recipe(val name: String, val imageRes: Int, val rating: Float, val time: String)
 data class ChefRecommendation(
@@ -673,7 +663,6 @@ data class ChefRecommendation(
     val time: String
 )
 
-// Sample data functions
 fun getCategoryList(): List<ExploreCategory> {
     return listOf(
         ExploreCategory("Italian", R.drawable.truffle_pasta),
