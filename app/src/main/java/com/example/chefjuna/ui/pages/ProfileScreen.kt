@@ -4,8 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -25,6 +29,12 @@ fun ProfileScreen(
     email: String = "arnold@chefjuna.com",
     navController: NavController,
 ) {
+    var isEditing by remember { mutableStateOf(false) }
+    var editUsername by remember { mutableStateOf(username) }
+    var editEmail by remember { mutableStateOf(email) }
+    var currentUsername by remember { mutableStateOf(username) }
+    var currentEmail by remember { mutableStateOf(email) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -45,7 +55,61 @@ fun ProfileScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Text("Account Details", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Account Details", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+
+                    if (isEditing) {
+                        Row {
+                            IconButton(
+                                onClick = {
+                                    // Save changes
+                                    currentUsername = editUsername
+                                    currentEmail = editEmail
+                                    isEditing = false
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = "Save",
+                                    tint = Color(0xFF508130)
+                                )
+                            }
+                            IconButton(
+                                onClick = {
+                                    // Cancel changes
+                                    editUsername = currentUsername
+                                    editEmail = currentEmail
+                                    isEditing = false
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = "Cancel",
+                                    tint = Color.Gray
+                                )
+                            }
+                        }
+                    } else {
+                        IconButton(
+                            onClick = {
+                                editUsername = currentUsername
+                                editEmail = currentEmail
+                                isEditing = true
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = "Edit",
+                                tint = Color(0xFF508130)
+                            )
+                        }
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Box(
@@ -65,11 +129,38 @@ fun ProfileScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text("Username", fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                Text(username, fontSize = 16.sp, color = Color.Gray)
+                if (isEditing) {
+                    OutlinedTextField(
+                        value = editUsername,
+                        onValueChange = { editUsername = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF508130),
+                            cursorColor = Color(0xFF508130)
+                        ),
+                        singleLine = true
+                    )
+                } else {
+                    Text(currentUsername, fontSize = 16.sp, color = Color.Gray)
+                }
+
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text("Email", fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                Text(email, fontSize = 16.sp, color = Color.Gray)
+                if (isEditing) {
+                    OutlinedTextField(
+                        value = editEmail,
+                        onValueChange = { editEmail = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF508130),
+                            cursorColor = Color(0xFF508130)
+                        ),
+                        singleLine = true
+                    )
+                } else {
+                    Text(currentEmail, fontSize = 16.sp, color = Color.Gray)
+                }
             }
         }
 
