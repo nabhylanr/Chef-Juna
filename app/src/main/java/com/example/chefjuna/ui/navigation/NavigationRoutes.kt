@@ -9,4 +9,5 @@ object NavigationRoutes {
     const val SPLASH = "splash"
     const val LOGIN = "login"
     const val REGISTER = "register"
+    const val OTP = "otp"
 }

@@ -20,9 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.chefjuna.R
-import com.example.chefjuna.ui.navigation.NavigationRoutes.HOME
 import com.example.chefjuna.ui.navigation.NavigationRoutes.LOGIN
 import com.example.chefjuna.ui.navigation.NavigationRoutes.REGISTER
+import com.example.chefjuna.ui.navigation.NavigationRoutes.OTP
+
 
 @Composable
 fun RegisterScreen(navController: NavController) {
@@ -117,7 +118,7 @@ fun RegisterScreen(navController: NavController) {
 
                 Button(
                     onClick = {
-                        navController.navigate(HOME) {
+                        navController.navigate(OTP) {
                             popUpTo(LOGIN) { inclusive = true }
                         }
                     },
